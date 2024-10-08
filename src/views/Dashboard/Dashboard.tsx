@@ -24,6 +24,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useState } from "react";
+import { assertIsNotNullish } from "@/utils";
 
 const plants = [
   {
@@ -68,16 +69,11 @@ export const Dashboard = () => {
       (schedule) => schedule.name === name,
     );
     const element = wateringSchedule[elementIndex];
-    if (element == null) {
-      return;
-    }
+    assertIsNotNullish(element);
 
     const nextElementIndex = elementIndex + 1;
     const nextElement = wateringSchedule[nextElementIndex];
-
-    if (nextElement == null) {
-      return;
-    }
+    assertIsNotNullish(nextElement);
 
     const mergedElement = {
       ...element,

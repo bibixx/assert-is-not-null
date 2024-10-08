@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,20 +11,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserContext } from "@/context/UserContext";
+import { assertIsNotNullish } from "@/utils";
 import { Leaf } from "lucide-react";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 export function Header() {
-  const context = useUserContext();
-  const userData = useMemo(() => context?.userData, [context?.userData]);
-  const logOut = context?.logOut;
+  const { logOut, userData } = useUserContext();
+  assertIsNotNullish(userData, "userData should be defined");
 
   const userAvatar = useMemo(() => {
-    if (userData == null) {
-      return "";
-    }
-
     const baseUrl = new URL("https://api.dicebear.com/9.x/micah/svg");
 
     const colors = ["f7adc3", "fcc5d9", "fadde3", "f7f5ed", "72ddf7"];
@@ -35,13 +30,6 @@ export function Header() {
 
     return baseUrl.toString();
   }, [userData]);
-
-  if (userData == null) {
-    Sentry.captureMessage("User data is missing in the header", {
-      level: "warning",
-    });
-    return null;
-  }
 
   return (
     <div className="border-b border-green-500/50 sticky top-0 bg-green-100 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-green-200/50 px-8">

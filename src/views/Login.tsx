@@ -8,12 +8,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export function LoginPage() {
-  const context = useUserContext();
-  if (context == null) {
-    return null;
-  }
+  const { logIn } = useUserContext();
 
-  return <HeadlessLoginPage logIn={context.logIn} />;
+  return <HeadlessLoginPage logIn={logIn} />;
 }
 
 interface HeadlessLoginPageProps {

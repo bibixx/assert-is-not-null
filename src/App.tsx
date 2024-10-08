@@ -43,8 +43,7 @@ function Root() {
 }
 
 function UnauthorizedApp() {
-  const context = useUserContext();
-  const userData = context?.userData;
+  const { userData } = useUserContext();
 
   if (userData !== null) {
     return null;
@@ -54,8 +53,7 @@ function UnauthorizedApp() {
 }
 
 function AuthorizedApp() {
-  const context = useUserContext();
-  const userData = context?.userData;
+  const { userData } = useUserContext();
 
   if (userData === null) {
     return null;

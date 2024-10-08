@@ -1,3 +1,4 @@
+import { assertIsNotNullish } from "@/utils";
 import {
   createContext,
   ReactNode,
@@ -17,7 +18,15 @@ interface UserContextType {
 }
 const UserContext = createContext<UserContextType | null>(null);
 
-export const useUserContext = () => useContext(UserContext);
+export const useUserContext = () => {
+  const context = useContext(UserContext);
+  assertIsNotNullish(
+    context,
+    "Cannot use useUserContext outside of UserContextProvider",
+  );
+
+  return context;
+};
 
 export const UserContextProvider = UserContext.Provider;
 
