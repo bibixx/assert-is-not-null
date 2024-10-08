@@ -53,7 +53,10 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("tailwindcss-inner-border")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("tailwindcss-inner-border"),
+  ],
   safelist: [
     {
       pattern: /bg-(blue|yellow|red|gray|green)-(100)/,

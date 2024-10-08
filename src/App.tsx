@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { UserContextProvider, useUserContext } from "./context/UserContext";
+import { UserContextWrapper, useUserContext } from "./context/UserContext";
 import { Dashboard } from "./views/Dashboard/Dashboard";
 import { LoginPage } from "./views/Login";
 import { Terms } from "./views/Terms";
@@ -12,7 +12,7 @@ function App() {
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
       <TooltipProvider>
-        <UserContextProvider>
+        <UserContextWrapper>
           <Router>
             <Switch>
               <Route path="/terms">
@@ -26,7 +26,7 @@ function App() {
               </Route>
             </Switch>
           </Router>
-        </UserContextProvider>
+        </UserContextWrapper>
         <ErrorListener />
       </TooltipProvider>
     </ErrorBoundary>
@@ -43,7 +43,9 @@ function Root() {
 }
 
 function UnauthorizedApp() {
-  const { userData } = useUserContext();
+  const context = useUserContext();
+  const userData = context?.userData;
+
   if (userData !== null) {
     return null;
   }
@@ -52,7 +54,9 @@ function UnauthorizedApp() {
 }
 
 function AuthorizedApp() {
-  const { userData } = useUserContext();
+  const context = useUserContext();
+  const userData = context?.userData;
+
   if (userData === null) {
     return null;
   }

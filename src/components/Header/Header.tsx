@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,16 +12,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserContext } from "@/context/UserContext";
-import { assertIsNotNull } from "@/utils";
 import { Leaf } from "lucide-react";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 export function Header() {
-  const { userData, logOut } = useUserContext();
-  assertIsNotNull(userData, "userData should not be null");
+  const context = useUserContext();
+  const userData = useMemo(() => context?.userData, [context?.userData]);
+  const logOut = context?.logOut;
 
   const userAvatar = useMemo(() => {
+    if (userData == null) {
+      return "";
+    }
+
     const baseUrl = new URL("https://api.dicebear.com/9.x/micah/svg");
 
     const colors = ["f7adc3", "fcc5d9", "fadde3", "f7f5ed", "72ddf7"];
@@ -29,7 +34,14 @@ export function Header() {
     baseUrl.searchParams.set("backgroundColor", colors.join(","));
 
     return baseUrl.toString();
-  }, [userData.name]);
+  }, [userData]);
+
+  if (userData == null) {
+    Sentry.captureMessage("User data is missing in the header", {
+      level: "warning",
+    });
+    return null;
+  }
 
   return (
     <div className="border-b border-green-500/50 sticky top-0 bg-green-100 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-green-200/50 px-8">
@@ -42,7 +54,11 @@ export function Header() {
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+            <Button
+              variant="ghost"
+              className="relative h-10 w-10 rounded-full"
+              data-testid="avatar"
+            >
               <Avatar className="h-10 w-10 relative">
                 <AvatarImage src={userAvatar} alt="" />
                 <AvatarFallback>{userData.name}</AvatarFallback>
@@ -50,11 +66,26 @@ export function Header() {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" side="bottom" forceMount>
+          <DropdownMenuContent
+            className="w-56"
+            align="end"
+            side="bottom"
+            forceMount
+          >
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{userData.name}</p>
-                <p className="text-xs leading-none text-muted-foreground">{getEmail(userData.name)}</p>
+                <p
+                  className="text-sm font-medium leading-none"
+                  data-testid="user-name"
+                >
+                  {userData.name}
+                </p>
+                <p
+                  className="text-xs leading-none text-muted-foreground"
+                  data-testid="email"
+                >
+                  {getEmail(userData.name)}
+                </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

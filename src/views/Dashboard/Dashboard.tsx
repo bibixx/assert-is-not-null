@@ -1,18 +1,49 @@
-import { ChevronDown, Droplet, Smile, Sun, ThermometerSun, Wind } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ChevronDown,
+  Droplet,
+  Smile,
+  Sun,
+  ThermometerSun,
+  Wind,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/Header/Header";
 import { Footer } from "@/components/Footer/Footer";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { assertIsNotNull } from "@/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useState } from "react";
 
 const plants = [
-  { name: "Ficus Lyrata", nickname: "Frank", image: "/images/ficus.jpg", status: "yellow" },
-  { name: "Host", nickname: "Hosta La Vista", image: "/images/hosta.jpg", status: "green" },
-  { name: "Succulent", nickname: "Succ It Up", image: "/images/succulent.jpg", status: "red" },
+  {
+    name: "Ficus Lyrata",
+    nickname: "Frank",
+    image: "/images/ficus.jpg",
+    status: "yellow",
+  },
+  {
+    name: "Host",
+    nickname: "Hosta La Vista",
+    image: "/images/hosta.jpg",
+    status: "green",
+  },
+  {
+    name: "Succulent",
+    nickname: "Succ It Up",
+    image: "/images/succulent.jpg",
+    status: "red",
+  },
 ];
 
 const wateringScheduleBase = [
@@ -29,16 +60,24 @@ const environmentalConditions = [
 ];
 
 export const Dashboard = () => {
-  const [wateringSchedule, setWateringSchedule] = useState(wateringScheduleBase);
+  const [wateringSchedule, setWateringSchedule] =
+    useState(wateringScheduleBase);
 
   const onMergeWithNext = (name: string) => {
-    const elementIndex = wateringSchedule.findIndex((schedule) => schedule.name === name);
+    const elementIndex = wateringSchedule.findIndex(
+      (schedule) => schedule.name === name,
+    );
     const element = wateringSchedule[elementIndex];
-    assertIsNotNull(element);
+    if (element == null) {
+      return;
+    }
 
     const nextElementIndex = elementIndex + 1;
     const nextElement = wateringSchedule[nextElementIndex];
-    assertIsNotNull(nextElement);
+
+    if (nextElement == null) {
+      return;
+    }
 
     const mergedElement = {
       ...element,
@@ -47,7 +86,11 @@ export const Dashboard = () => {
       progress: Math.round((element.progress + nextElement.progress) / 2),
     };
 
-    setWateringSchedule((prev) => [...prev.slice(0, elementIndex), mergedElement, ...prev.slice(elementIndex + 2)]);
+    setWateringSchedule((prev) => [
+      ...prev.slice(0, elementIndex),
+      mergedElement,
+      ...prev.slice(elementIndex + 2),
+    ]);
   };
 
   return (
@@ -56,15 +99,21 @@ export const Dashboard = () => {
       <div className="bg-green-50 p-8 flex-grow">
         <div className="max-w-6xl mx-auto space-y-8">
           <header className="text-center">
-            <h1 className="text-4xl font-bold text-green-800">🌿 Leaf It to Me: Plant Care Dashboard 🌱</h1>
-            <p className="text-green-600 mt-2">Where every day is a chlorophyll-good day!</p>
+            <h1 className="text-4xl font-bold text-green-800">
+              🌿 Leaf It to Me: Plant Care Dashboard 🌱
+            </h1>
+            <p className="text-green-600 mt-2">
+              Where every day is a chlorophyll-good day!
+            </p>
           </header>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card className="col-span-1 md:col-span-2">
               <CardHeader>
                 <CardTitle>Featured Plants</CardTitle>
-                <CardDescription>Your green squad in the spotlight</CardDescription>
+                <CardDescription>
+                  Your green squad in the spotlight
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -91,12 +140,17 @@ export const Dashboard = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Plant Status</CardTitle>
-                <CardDescription>How your green friends are feeling</CardDescription>
+                <CardDescription>
+                  How your green friends are feeling
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {plants.map((plant) => (
-                    <div key={plant.nickname} className="flex items-center justify-between">
+                    <div
+                      key={plant.nickname}
+                      className="flex items-center justify-between"
+                    >
                       <span className="font-medium">
                         {plant.name} ({plant.nickname})
                       </span>
@@ -110,14 +164,18 @@ export const Dashboard = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Watering Schedule</CardTitle>
-                <CardDescription>Keep &rsquo;em hydrated, not drowned!</CardDescription>
+                <CardDescription>
+                  Keep &rsquo;em hydrated, not drowned!
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {wateringSchedule.map((schedule, i, arr) => (
                     <div key={schedule.name}>
                       <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium">{schedule.name}</span>
+                        <span className="text-sm font-medium">
+                          {schedule.name}
+                        </span>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button
@@ -150,8 +208,9 @@ export const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <blockquote className="italic text-lg text-center">
-                  &ldquo;I&rsquo;m rooting for you, but I think it's thyme you leaf this relationship. Don't let it
-                  succ-ulent your happiness!&rdquo;
+                  &ldquo;I&rsquo;m rooting for you, but I think it's thyme you
+                  leaf this relationship. Don't let it succ-ulent your
+                  happiness!&rdquo;
                 </blockquote>
               </CardContent>
             </Card>
@@ -159,7 +218,9 @@ export const Dashboard = () => {
             <Card className="md:col-span-2">
               <CardHeader>
                 <CardTitle>Environmental Conditions</CardTitle>
-                <CardDescription>Creating the perfect plant paradise</CardDescription>
+                <CardDescription>
+                  Creating the perfect plant paradise
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -171,9 +232,15 @@ export const Dashboard = () => {
                         `bg-${condition.color}-100`,
                       )}
                     >
-                      <condition.icon className={`text-${condition.color}-500 mb-2`} />
-                      <span className="text-sm font-medium">{condition.name}</span>
-                      <span className="text-lg font-bold">{condition.value}</span>
+                      <condition.icon
+                        className={`text-${condition.color}-500 mb-2`}
+                      />
+                      <span className="text-sm font-medium">
+                        {condition.name}
+                      </span>
+                      <span className="text-lg font-bold">
+                        {condition.value}
+                      </span>
                     </div>
                   ))}
                 </div>

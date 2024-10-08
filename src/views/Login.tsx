@@ -8,9 +8,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export function LoginPage() {
-  const { logIn } = useUserContext();
+  const context = useUserContext();
+  if (context == null) {
+    return null;
+  }
 
-  return <HeadlessLoginPage logIn={logIn} />;
+  return <HeadlessLoginPage logIn={context.logIn} />;
 }
 
 interface HeadlessLoginPageProps {
@@ -29,17 +32,40 @@ function HeadlessLoginPage({ logIn }: HeadlessLoginPageProps) {
   return (
     <>
       <div className="container relative hidden min-h-[100dvh] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-        <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-          <div className="absolute inset-0 bg-green-900" />
-          <div className="relative z-20 flex items-center text-lg font-medium">
+        <div className="relative hidden h-full flex-col  text-white dark:border-r lg:flex bg-green-900">
+          <div className="absolute inset-0 opacity-50">
+            <img
+              src="/images/hero.jpg"
+              className="w-full h-full object-cover"
+              alt=""
+            />
+          </div>
+          <div
+            className="absolute top-0 left-0 w-full h-96 backdrop-blur-xl"
+            style={{ mask: `linear-gradient(to bottom, black, transparent)` }}
+          />
+          <div
+            className="absolute top-0 left-0 w-full h-80 bg-green-900"
+            style={{ mask: `linear-gradient(to bottom, black, transparent)` }}
+          />
+          <div
+            className="absolute bottom-0 left-0 w-full h-96 backdrop-blur-xl"
+            style={{ mask: `linear-gradient(to top, black, transparent)` }}
+          />
+          <div
+            className="absolute bottom-0 left-0 w-full h-80 bg-green-900"
+            style={{ mask: `linear-gradient(to top, black, transparent)` }}
+          />
+          <div className="relative z-20 p-10 flex items-center text-lg font-medium">
             <Leaf className="mr-2 h-6 w-6" />
             Leaf It to Me
           </div>
-          <div className="relative z-20 mt-auto">
-            <blockquote className="space-y-2">
+          <div className="relative z-20 mt-auto p-10">
+            <blockquote className="space-y-2 relative">
               <p className="text-lg">
-                &ldquo;Thanks to Leaf It to Me, my plants are thriving, and I finally feel like a plant whisperer. It's
-                like having a green thumb on autopilot!&rdquo;
+                &ldquo;Thanks to Leaf It to Me, my plants are thriving, and I
+                finally feel like a plant whisperer. It's like having a green
+                thumb on autopilot!&rdquo;
               </p>
               <footer className="text-sm">Emily Greenfield</footer>
             </blockquote>
@@ -52,11 +78,20 @@ function HeadlessLoginPage({ logIn }: HeadlessLoginPageProps) {
                 <div className="flex flex-col gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="username">Username</Label>
-                    <Input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                    <Input
+                      id="username"
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="password">Password</Label>
-                    <Input defaultValue="my-password" id="password" type="password" />
+                    <Input
+                      defaultValue="my-password"
+                      id="password"
+                      type="password"
+                    />
                   </div>
                   <Button>Sign In</Button>
                 </div>
@@ -64,12 +99,18 @@ function HeadlessLoginPage({ logIn }: HeadlessLoginPageProps) {
             </div>
             <p className="px-8 text-center text-sm text-muted-foreground">
               By clicking sign in, you agree to our{" "}
-              <Link to="/terms" className="underline underline-offset-4 hover:text-primary">
-                Terms of Service
+              <Link
+                to="/terms"
+                className="underline underline-offset-4 hover:text-primary"
+              >
+                Terms&nbsp;of&nbsp;Service
               </Link>{" "}
               and{" "}
-              <Link to="/privacy" className="underline underline-offset-4 hover:text-primary">
-                Privacy Policy
+              <Link
+                to="/privacy"
+                className="underline underline-offset-4 hover:text-primary"
+              >
+                Privacy&nbsp;Policy
               </Link>
               .
             </p>

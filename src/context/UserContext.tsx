@@ -1,5 +1,10 @@
-import { assertIsNotNull } from "@/utils";
-import { createContext, ReactNode, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 export interface UserData {
   name: string;
@@ -12,21 +17,15 @@ interface UserContextType {
 }
 const UserContext = createContext<UserContextType | null>(null);
 
-export const useUserContext = () => {
-  const context = useContext(UserContext);
-  assertIsNotNull(context, "useUserContext must be used within a UserContextProvider");
+export const useUserContext = () => useContext(UserContext);
 
-  return context;
-};
+export const UserContextProvider = UserContext.Provider;
 
 interface UserContextProviderProps {
   children: ReactNode;
 }
-export const UserContextProvider = (props: UserContextProviderProps) => {
-  const [userData, setUserData] = useState<UserData | null>({
-    name: "John",
-  });
-  // const [userData, setUserData] = useState<UserData | null>(null);
+export const UserContextWrapper = (props: UserContextProviderProps) => {
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const logIn = useCallback((userData: UserData) => {
     setUserData(userData);
@@ -36,5 +35,9 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
     setUserData(null);
   }, []);
 
-  return <UserContext.Provider value={{ userData, logIn, logOut }}>{props.children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ userData, logIn, logOut }}>
+      {props.children}
+    </UserContext.Provider>
+  );
 };
